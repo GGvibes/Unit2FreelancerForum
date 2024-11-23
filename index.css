@@ -1,21 +1,15 @@
 body {
-    text-align: center;
-    background-color: black;
-    color: #aadeee;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
   }
+  
   table {
-    width: 70%;
-    margin-left: 20%;
+    width: 50%;
   }
-  tbody td,
-  th {
-    text-align: justify;
-  }
-  th {
-    font-size: large;
-    text-transform: capitalize;
-  }
-  tr:nth-child(odd) {
-    background-color: #bbbbbb;
-    color: black;
+  
+  td {
+    text-align: center;
   }
