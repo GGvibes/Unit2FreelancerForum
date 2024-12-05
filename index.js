@@ -1,98 +1,132 @@
-// === State ===
-/** The program initializes an array of possible names and an array of possible occupations. */
-const names = ['Alice', 'Bob', 'Cynthia', 'Damian', 'Emma', 'Frank', 'Gina'];
-const occupations = [
-  'Writer',
-  'Teacher',
-  'Programmer',
-  'Designer',
-  'Driver',
-  'Gardener',
-];
-
-/** The program initializes an array of at least two freelancers with names, occupations, and starting prices. */
+//example freelancers
 const freelancers = [
-  { name: 'Alice', price: 25, occupation: 'Programmer' },
-  { name: 'Gina', price: 52, occupation: 'Driver' },
+  { name: "Dr. Slice", price: 25, occupation: "Gardener" },
+  { name: "Dr. Pressure", price: 51, occupation: "Programmer" },
+  { name: "Prof. Possibility", price: 43, occupation: "Teacher" },
+  { name: "Prof. Prism", price: 81, occupation: "Teacher" },
+  { name: "Dr. Impulse", price: 43, occupation: "Teacher" },
+  { name: "Prof. Spark", price: 76, occupation: "Programmer" },
+  { name: "Dr. Wire", price: 47, occupation: "Teacher" },
+  { name: "Prof. Goose", price: 72, occupation: "Driver" },
 ];
-const maxLength = 15;
 
-// Adds a random freelancer
-/** A function is written that generates a freelancer with a random name, occupation, and starting price. */
-function addFreelancer() {
-  const name = names[Math.floor(Math.random() * names.length)];
-  const occupation =
-    occupations[Math.floor(Math.random() * occupations.length)];
-  const price = Math.floor(Math.random() * 100);
+//possible names
+const names = [
+  "Aria",
+  "Elijah",
+  "Olivia",
+  "Jackson",
+  "Sophia",
+  "Liam",
+  "Emma",
+  "Mason",
+  "Isabella",
+  "Lucas",
+];
 
-  // Create new freelancer object and push into the freelancers array
-  freelancers.push({ name, price, occupation });
+//possible occupations
+const occupations = [
+  "Software Developer",
+  "Teacher",
+  "Nurse",
+  "Mechanical Engineer",
+  "Graphic Designer",
+  "Chef",
+  "Marketing Analyst",
+  "Electrician",
+  "Physician",
+  "Data Scientist",
+];
+
+function init() {
+  const h1 = document.createElement("h1");
+  h1.textContent = "Freelancer Forum";
+  root.appendChild(h1);
+
+  const h2 = document.createElement("h2");
+  h2.textContent = "The average starting price is $30";
+  root.appendChild(h2);
+
+  const availableH1 = document.createElement("h1");
+  availableH1.textContent = "Available Freelancers";
+  root.appendChild(availableH1);
+
+  let newPrice = document.querySelector("#newPrice");
+  newPrice = calAvgPrice(freelancers);
+  newPrice.textContent = "$(newPrice)";
+
 }
 
-// === Render ===
-// Update the DOM to reflect the current state
-function render() {
-  /** `document.querySelector` is correctly used to select existing DOM elements. */
-  const averagePrice = document.querySelector('#average-price');
-  const tableBody = document.querySelector('#table-body');
+/**
+ * 👉 STEP 1: Grab the div with the id of "root"
+ */
+const root = document.getElementById("root");
 
-  // Create an array of row elements from the freelancers array
-  const rowElements = freelancers.map((freelancer) => {
-    // Create a new row for each freelancer
-    const newRow = document.createElement('tr');
-    // Object destructuring: https://dmitripavlutin.com/javascript-object-destructuring/
-    const { name, price, occupation } = freelancer;
-    // Create "td" elements for each detail & add the text
-    const nameDetail = document.createElement('td');
-    nameDetail.innerText = name;
+function freeRender() {
+    const table = document.createElement("table");
+    root.appendChild(table);
+  
+    const tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+  
+    //this is name, occupation, price
+    const nameColumn1 = document.createElement("th");
+    nameColumn1.textContent = "Name";
+    tbody.appendChild(nameColumn1);
+  
+    const jobColumn2 = document.createElement("th");
+    jobColumn2.textContent = "Occupation";
+    tbody.appendChild(jobColumn2);
+  
+    const priceColumn3 = document.createElement("th");
+    priceColumn3.textContent = "Starting Price";
+    tbody.appendChild(priceColumn3);
+  
+  const freelancer = document.createElement("td");
 
-    const occupationDetail = document.createElement('td');
-    occupationDetail.innerText = occupation;
+  freelancers.forEach((person) => {
+    const freeRow = document.createElement("tr");
+    tbody.appendChild(freeRow);
 
-    const priceDetail = document.createElement('td');
-    priceDetail.innerText = `$${price}`;
+    const nameCell = document.createElement("td");
+    nameCell.textContent = person.name;
+    freeRow.appendChild(nameCell);
 
-    // Append all the "td" elements to the row
-    newRow.append(nameDetail, occupationDetail, priceDetail);
-    // Return the newly created row & its child elements
-    return newRow;
+    const jobCell = document.createElement("td");
+    jobCell.textContent = person.occupation;
+    freeRow.appendChild(jobCell);
+
+    const priceCell = document.createElement("td");
+    priceCell.textContent = person.price;
+    freeRow.appendChild(priceCell);
+
+    tbody.appendChild(freeRow);
   });
-
-  // Add the freelancer rows to the table body
-  tableBody.replaceChildren(...rowElements);
-
-  /** The DOM is updated to reflect the average starting price. */
-  const newAverage = calculateAveragePrice();
-  averagePrice.innerText = `$${newAverage}`;
 }
+/**
+ * 👉 STEP 6:
+ *    Create a function to add a new Freelancer to the Freelancers array
+ */
+function addNewFreelancer() {
+  const addPrice = Math.floor(Math.random() * 100);
 
-/** A function is written that correctly calculates the average starting price of the freelancers array. */
-function calculateAveragePrice() {
-  const total = freelancers.reduce(
-    (subtotal, current) => subtotal + current.price,
-    0
-  );
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
-  return Math.round(total / freelancers.length);
+  const addName = names[Math.floor(Math.random() * names.length)];
+
+  const addJob = occupations[Math.floor(Math.random() * occupations.length)];
+
+  freelancers.push({ name: addName, occupation: addJob, price: addPrice });
+
+  freeRender();
 }
-
-// === Script ===
-
-/** An interval is set to add a freelancer and rerender every few seconds. */
-const addFreelancerIntervalId = setInterval(() => {
-  addFreelancer();
-  render();
-
-  // Clear setInterval when freelancers length is equal to max length
-  if (freelancers.length >= maxLength) {
-    clearInterval(addFreelancerIntervalId);
-  }
-}, 1000);
-
-/** The initial array of freelancers is rendered onto the page. */
-// Call this funciton once to render the initial state
-render();
+/**
+ * 👉 STEP 7:
+ *    Add an interval to add a new Freelancer every second
+ */
+let newFreelancer = setInterval(addNewFreelancer, 1000);
+setTimeout(() => {
+  clearInterval(newFreelancer);
 }, 5000);
 
 //call init function
 init();
+
