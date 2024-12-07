@@ -2,12 +2,6 @@
 const freelancers = [
   { name: "Dr. Slice", price: 25, occupation: "Gardener" },
   { name: "Dr. Pressure", price: 51, occupation: "Programmer" },
-  { name: "Prof. Possibility", price: 43, occupation: "Teacher" },
-  { name: "Prof. Prism", price: 81, occupation: "Teacher" },
-  { name: "Dr. Impulse", price: 43, occupation: "Teacher" },
-  { name: "Prof. Spark", price: 76, occupation: "Programmer" },
-  { name: "Dr. Wire", price: 47, occupation: "Teacher" },
-  { name: "Prof. Goose", price: 72, occupation: "Driver" },
 ];
 
 //possible names
@@ -38,95 +32,65 @@ const occupations = [
   "Data Scientist",
 ];
 
-function init() {
-  const h1 = document.createElement("h1");
-  h1.textContent = "Freelancer Forum";
-  root.appendChild(h1);
+const maxLength = 25;
 
-  const h2 = document.createElement("h2");
-  h2.textContent = "The average starting price is $30";
-  root.appendChild(h2);
+function addFreelancer() {
+  const name = names[Math.floor(Math.random() * names.length)];
+  const occupation =
+    occupations[Math.floor(Math.random() * occupations.length)];
+  const price = Math.floor(Math.random() * 100);
 
-  const availableH1 = document.createElement("h1");
-  availableH1.textContent = "Available Freelancers";
-  root.appendChild(availableH1);
-
-  let newPrice = document.querySelector("#newPrice");
-  newPrice = calAvgPrice(freelancers);
-  newPrice.textContent = "$(newPrice)";
-
+  freelancers.push({ name, price, occupation });
 }
 
-/**
- * 👉 STEP 1: Grab the div with the id of "root"
- */
-const root = document.getElementById("root");
+function render() {
+  const tableBody = document.querySelector("#table-body");
+  const avgPrice = document.querySelector("#avgPrice")
 
-function freeRender() {
-    const table = document.createElement("table");
-    root.appendChild(table);
-  
-    const tbody = document.createElement("tbody");
-    table.appendChild(tbody);
-  
-    //this is name, occupation, price
-    const nameColumn1 = document.createElement("th");
-    nameColumn1.textContent = "Name";
-    tbody.appendChild(nameColumn1);
-  
-    const jobColumn2 = document.createElement("th");
-    jobColumn2.textContent = "Occupation";
-    tbody.appendChild(jobColumn2);
-  
-    const priceColumn3 = document.createElement("th");
-    priceColumn3.textContent = "Starting Price";
-    tbody.appendChild(priceColumn3);
-  
-  const freelancer = document.createElement("td");
+  const rowElements = freelancers.map((freelancer) => {
+    const newRow = document.createElement("tr");
+    const { name, price, occupation } = freelancer;
 
-  freelancers.forEach((person) => {
-    const freeRow = document.createElement("tr");
-    tbody.appendChild(freeRow);
+    const nameDetail = document.createElement("td");
+    nameDetail.innerText = name;
 
-    const nameCell = document.createElement("td");
-    nameCell.textContent = person.name;
-    freeRow.appendChild(nameCell);
+    const occupationDetail = document.createElement("td");
+    occupationDetail.innerText = occupation;
 
-    const jobCell = document.createElement("td");
-    jobCell.textContent = person.occupation;
-    freeRow.appendChild(jobCell);
+    const priceDetail = document.createElement("td");
+    priceDetail.innerText = `$${price}`;
 
-    const priceCell = document.createElement("td");
-    priceCell.textContent = person.price;
-    freeRow.appendChild(priceCell);
+    newRow.append(nameDetail, occupationDetail, priceDetail);
 
-    tbody.appendChild(freeRow);
+    return newRow;
   });
+  tableBody.replaceChildren(...rowElements);
+
+  const newAverage = calAvgPrice();
+  avgPrice.innerText = `$${newAverage}`;
 }
-/**
- * 👉 STEP 6:
- *    Create a function to add a new Freelancer to the Freelancers array
- */
-function addNewFreelancer() {
-  const addPrice = Math.floor(Math.random() * 100);
-
-  const addName = names[Math.floor(Math.random() * names.length)];
-
-  const addJob = occupations[Math.floor(Math.random() * occupations.length)];
-
-  freelancers.push({ name: addName, occupation: addJob, price: addPrice });
-
-  freeRender();
+//Cal Average Price
+function calAvgPrice() {
+  const total = freelancers.reduce(
+    (subtotal, current) => subtotal + current.price,
+    0
+  );
+  return Math.round(total / freelancers.length);
 }
+
 /**
  * 👉 STEP 7:
  *    Add an interval to add a new Freelancer every second
  */
-let newFreelancer = setInterval(addNewFreelancer, 1000);
-setTimeout(() => {
-  clearInterval(newFreelancer);
-}, 5000);
+const addFreelancerIntervalId = setInterval(() => {
+  addFreelancer();
+  render();
+
+  // Clear setInterval when freelancers length is equal to max length
+  if (freelancers.length >= maxLength) {
+    clearInterval(addFreelancerIntervalId);
+  }
+}, 1000);
 
 //call init function
-init();
-
+render();
